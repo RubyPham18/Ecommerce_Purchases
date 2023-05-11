@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[50]:
+# In[10]:
 
 
 #1.Find the relationship between top 5 Job designation and total Purchase amount
@@ -34,11 +34,16 @@ ax.set_xticklabels(ax.get_xticklabels(), rotation=45, horizontalalignment='right
 plt.show()
 
 
-# In[51]:
+# In[11]:
 
 
 #3.How does purchase value depend on the Internet Browser used and Job (Profession) of the purchaser?
 #Group by job and browser preferences
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+data = pd.read_csv('Ecommerce_Purchases.csv')
 jobBrowser = data.groupby(by=['Job', 'Browser'], as_index=False, )['Purchase Price'].count() 
 plt.title(f"Browser Preferences of largest job groups :")
 ax = sns.barplot(x = "Purchase Price_y", y = "Job",hue="Browser" ,  
@@ -68,25 +73,25 @@ plt.show()
 
 
 
-# In[61]:
+# In[19]:
 
 
 #4.What are the patterns, if any, on the purchases based on Location (State) and time of purchase (AM or PM)?
 
-res=data.groupby(by='State', as_index=False)['Purchase Price'].count()
-res = res.sort_values(by='Purchase Price', ascending=False).iloc[:5,:]
-res4=data.groupby(by=['State','AM or PM'], as_index=False)['Purchase Price'].count()
-res4= res4.sort_values(by='Purchase Price', ascending=False)
+group=data.groupby(by='State', as_index=False)['Purchase Price'].count()
+group = group.sort_values(by='Purchase Price', ascending=False).iloc[:5,:]
+group1=data.groupby(by=['State','AM or PM'], as_index=False)['Purchase Price'].count()
+group1= group1.sort_values(by='Purchase Price', ascending=False)
 
 plt.title('Most purchases done by State (locations) and time')
 ax = sns.barplot(x = "Purchase Price_y", y = "State",hue="AM or PM" , orient = 'h', \
-                 data = res.merge(res4, on = 'State', how = 'inner'))
+                 data = group.merge(group1, on = 'State', how = 'inner'))
 ax.set(ylabel="Top ordering states", xlabel = "Total Count of Purchases")
 ax.set_xticklabels(ax.get_xticklabels(), rotation=45, horizontalalignment='right')
 plt.show()
 
 
-# In[64]:
+# In[18]:
 
 
 #5.How does purchase depend on ‘CC’ provider and time of purchase ‘AM or PM’?
@@ -111,26 +116,32 @@ plt.show()
 
 
 
-# In[73]:
+# In[12]:
 
 
 #6.What are top 5 Location(State) for purchases?
 fig, axarr = plt.subplots(1, 2, figsize=(24, 5))
-#print('The TOP 5 Locations(state) with number of purchase...')
-res=data.groupby(by='State', as_index=False).count()[['State','Purchase Price']]
-res = res.sort_values(by='Purchase Price', ascending=False).head()
-ax = sns.barplot(x = "State", y = "Purchase Price", data = res, ax=axarr[0])
+#print number of purchase
+group2=data.groupby(by='State', as_index=False).count()[['State','Purchase Price']]
+group2 = group2.sort_values(by='Purchase Price', ascending=False).head()
+ax = sns.barplot(x = "State", y = "Purchase Price", data = group2, ax=axarr[0])
 axarr[0].set_title("Top Most Number of Purchases done by Location(State)", fontsize=15)
 ax.set(xlabel=None, ylabel = "Total Number of Purchases")
 ax.set_xticklabels(ax.get_xticklabels(), rotation=45, horizontalalignment='right')
 
-#print('The TOP 5 Locations(state) with max amount of purchase...')
-res=data.groupby(by='State', as_index=False).sum()[['State','Purchase Price']]
-res = res.sort_values(by='Purchase Price', ascending=False).head()
-ax = sns.barplot(x = "State", y = "Purchase Price", data = res, ax=axarr[1])
+#print amount of purchase
+group2=data.groupby(by='State', as_index=False).sum()[['State','Purchase Price']]
+group2 = group2.sort_values(by='Purchase Price', ascending=False).head()
+ax = sns.barplot(x = "State", y = "Purchase Price", data = group2, ax=axarr[1])
 axarr[1].set_title("Top Most Value of Purchases done by Location(State)", fontsize=15)
 ax.set(xlabel=None, ylabel = "Total Value of Purchases")
 ax.set_xticklabels(ax.get_xticklabels(), rotation=45, horizontalalignment='right')
 
 plt.show()
+
+
+# In[ ]:
+
+
+
 
